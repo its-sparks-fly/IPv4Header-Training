@@ -6,7 +6,7 @@ public class Main {
 		Input input = new Input();
 		Header header = input.start(eingabe);
 		
-		System.out.println("Soll die Ausgabe bin‰r (0) oder als String (1) erfolgen?");
+		System.out.println("Soll die Ausgabe bin√§r (0) oder als String (1) erfolgen?");
 		int choice = eingabe.nextInt();
 		eingabe.close();
 		
@@ -24,15 +24,22 @@ public class Main {
 		String destination = header.getDestination();
 		
 		if(choice == 1) {
-			System.out.println(IPv4Header(version, IHL, TOS, packetlength ,identifier, flags, offset, TTL, protocol, checksum, source, destination));	
+			Object[] headerData = {version, IHL, TOS, packetlength ,identifier, flags, offset, TTL, protocol, checksum, source, destination};
+			System.out.println(buildstring(headerData));	
 		} else {
 			// Binary-Method here!
 		}
 		
 	}
 	
-	public static String IPv4Header(int version, int IHL, int TOS, int packetlength, int identifier, String flags, int offset, int TTL, int protocol, int checksum, String source, String destination) {
-		String fullheader = version+"-"+IHL+"-"+TOS+"-"+packetlength+"-"+identifier+"-"+flags+"-"+offset+"-"+TTL+"-"+protocol+"-"+checksum+"-"+source+"-"+destination;
-		return fullheader;
+	private static String buildstring(Object[] headerData) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for(int i = 0; i< headerData.length; i++){
+			stringBuilder.append(headerData[i]);
+			stringBuilder.append("-");
+		}
+		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+		String headerString = stringBuilder.toString();
+		return headerString;
 	}
 }
