@@ -11,7 +11,95 @@ public class Header {
 	private int checksum = 0;
 	private String source;
 	private String destination;
+	Input input = new Input();
+	StringBuilder buildstring = new StringBuilder();
+	StringBuilder binarystring = new StringBuilder();
+	
+	public String start(Header header) {
+		//////////////////////
+		// STARTS USER INPUT
+		// RETURNS CONVERTED HEADER
+		//////////////////////
+		Object[] headerData = input.start(header);
+		final String output = convertHeader(headerData);
+		return output;
+	}
+	
+	private String convertHeader(Object[] headerData) {
+		//////////////////////
+		// CONVERTS HEADER
+		// BASED ON USER'S CHOICE
+		//////////////////////
+		int choice = input.getChoice();	
+		String output;
+		if(choice == 1) {
+			output = buildstring(headerData);	
+		} else {
+			output = binarystring(headerData);
+		}
+		return output;
+	}
+	
+	private String buildstring(Object[] headerData) {
+		//////////////////////
+		// CONVERTS ARRAY TO STRING
+		// SEPARATED BY "-"
+		//////////////////////
+		for(int i = 0; i< headerData.length; i++){
+			buildstring.append(headerData[i]);
+			buildstring.append("-");
+		}
+		buildstring.deleteCharAt(buildstring.length() - 1);
+		String headerString = buildstring.toString();
+		return headerString;
+	}
+	
+	private String binarystring(Object[] headerData) {
+		//////////////////////
+		// CONVERTS INPUT TO BINARY
+		//////////////////////	
+		String binary = null;
+		for(int i = 0; i< headerData.length; i++){
+			if(!(i == 5) && !(i == 10) && !(i == 11)) {
+				int decimal = (Integer) headerData[i];
+				binary = Integer.toBinaryString(decimal);
+			} else if (i == 5) {
+				binary = headerData[i].toString();
+			} else if (i == 10 || i == 11) {
+				String IP = headerData[i].toString();
+				binary = binaryIP(IP);
+			}
+			binarystring.append(binary);
+			binarystring.append(" ");
+		}
+		
+		return binarystring.toString();	
+	}
+	
+	private String binaryIP(String IP) {
+		//////////////////////
+		// CONVERTS IP ADRESS TO BINARY
+		//////////////////////	
+		String[] numbers = null;
+		String binNumber = ""; 
+		StringBuilder binIP = new StringBuilder();
+		
+		numbers = IP.split("\\.");
+		
+		for(int i = 0; i< numbers.length; i++){
+			int number = Integer.parseInt(numbers[i]);
+			binNumber = Integer.toBinaryString(number);
+			binIP.append(binNumber);
+		}
+		
+		String binaryIP = binIP.toString();
+		return binaryIP;
+	}
+	
 
+	//////////////////////
+	// SETTER & GETTER ///
+	//////////////////////
 	
 	public void setVersion(int version) {
 		this.version = version;
@@ -63,7 +151,6 @@ public class Header {
 	public int getTTL() {
 		return this.TTL;
 	}
-	
 	
 	public int getProtocol() {
 		return protocol;
