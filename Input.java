@@ -1,9 +1,16 @@
 import java.util.Scanner;
+
 public class Input {
+	private int choice;
+	Scanner eingabe = new Scanner(System.in);
 	
-	public Header start(Scanner eingabe) {
+	public Object[] start(Header header) {
+		//////////////////////
+		// STARTS USER INPUT
+		// RETURNS USER INPUT + FULL HEADER DATA
+		//////////////////////
 		
-		Header header = new Header();
+		setChoice();
 		
 		System.out.println("Bitte geben Sie die Version der IP ein:");
 		int version = eingabe.nextInt();
@@ -27,7 +34,48 @@ public class Input {
 		String Destination = eingabe.next(); 
 		header.setDestination(Destination);
 		
-		return header;
+		eingabe.close();
+		
+		int finalversion = header.getVersion();
+		int IHL = header.getIHL();
+		int TOS = header.getTOS();
+		int packetlength = header.getPacketLength();
+		int identifier = header.getIdentifier();
+		String flags = header.getFlags();
+		int offset = header.getOffset();
+		int finalTTL = header.getTTL();
+		int protocol = header.getProtocol();
+		int checksum = header.getChecksum();
+		String source = header.getSource();
+		String destination = header.getDestination();
+		Object[] headerData = {
+			finalversion, 
+			IHL, 
+			TOS, 
+			packetlength,
+			identifier, 
+			flags, 
+			offset, 
+			finalTTL, 
+			protocol, 
+			checksum, 
+			source, 
+			destination
+		};
+		
+		return headerData;
 	}
 	
+	private void setChoice() {
+		//////////////////////
+		// LETS USER CHOOSE IF BINARY OR STRING OUTPUT
+		//////////////////////		
+		System.out.println("Soll die Ausgabe binär (0) oder als String (1) erfolgen?");
+		choice = eingabe.nextInt();
+		
+	}
+	
+	public int getChoice() {
+		return choice;
+	}
 }
