@@ -35,8 +35,7 @@ public class Header {
 	
 	private String convertHeader(Object[] headerData) {
 		//////////////////////
-		// CONVERTS HEADER
-		// BASED ON USER'S CHOICE
+		// CONVERTS HEADER IF INPUT IS NON-BINARY
 		//////////////////////
 		String output;
 		output = "String: " + buildstring(headerData) + "\n" + "Binär: " + binarystring(headerData);	
