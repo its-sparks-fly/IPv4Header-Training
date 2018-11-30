@@ -10,8 +10,6 @@ public class Input {
 		// RETURNS USER INPUT + FULL HEADER DATA
 		//////////////////////
 		
-		setChoice();
-		
 		System.out.println("Bitte geben Sie die Version der IP ein:");
 		int version = eingabe.nextInt();
 		header.setVersion(version);
@@ -65,12 +63,19 @@ public class Input {
 		
 		return headerData;
 	}
+
+	public void binaryInput(Header header) {
+		System.out.println("Bitte gib die IPv4-Header-Felder als binären String ein (Felder mit Leerzeichen getrennt):");
+		eingabe.nextLine();
+		String binary = eingabe.nextLine();
+		header.setBinary(binary);	
+	}
 	
-	private void setChoice() {
+	public void setChoice() {
 		//////////////////////
-		// LETS USER CHOOSE IF BINARY OR STRING OUTPUT
+		// LET'S USER CHOOSE IF BINARY OR STRING OUTPUT
 		//////////////////////		
-		System.out.println("Soll die Ausgabe binär (0) oder als String (1) erfolgen?");
+		System.out.println("Soll die Eingabe binär gesamt oder einzeln für jedes Feld erfolgen?");
 		choice = eingabe.nextInt();
 		
 	}
