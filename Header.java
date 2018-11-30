@@ -11,17 +11,25 @@ public class Header {
 	private int checksum = 0;
 	private String source;
 	private String destination;
-	Input input = new Input();
-	StringBuilder buildstring = new StringBuilder();
-	StringBuilder binarystring = new StringBuilder();
+	private String binary;
 	
 	public String start(Header header) {
 		//////////////////////
 		// STARTS USER INPUT
 		// RETURNS CONVERTED HEADER
 		//////////////////////
-		Object[] headerData = input.start(header);
-		final String output = convertHeader(headerData);
+		Input input = new Input();
+		String output;
+		input.setChoice();
+		
+		if(input.getChoice() == 1) {
+			Object[] headerData = input.start(header);
+			output = convertHeader(headerData);			
+		} else {
+			input.binaryInput(header);
+			String headerData = getBinary();
+			output = convertBinary(headerData);
+		}
 		return output;
 	}
 	
@@ -30,17 +38,30 @@ public class Header {
 		// CONVERTS HEADER
 		// BASED ON USER'S CHOICE
 		//////////////////////
-		int choice = input.getChoice();	
 		String output;
-		if(choice == 1) {
-			output = buildstring(headerData);	
-		} else {
-			output = binarystring(headerData);
-		}
+		output = "String: " + buildstring(headerData) + "\n" + "Binär: " + binarystring(headerData);	
 		return output;
 	}
 	
+	private String convertBinary(String headerData) {
+		String[] numbers = headerData.split("\\s+");
+		Object[] decimals = new Object[12];
+		for(int i = 0; i< numbers.length; i++){
+			if(i == 5) {
+				decimals[i] = numbers[i];
+			} else if (i == 10 || i == 11) { 
+				decimals[i] = IPString(numbers[i]);
+			} else {
+				int decimalValue = Integer.parseInt(numbers[i], 2);
+				decimals[i] = decimalValue;
+			}
+		}
+		String decimalString = buildstring(decimals);
+		return decimalString;
+	}
+	
 	private String buildstring(Object[] headerData) {
+		StringBuilder buildstring = new StringBuilder();
 		//////////////////////
 		// CONVERTS ARRAY TO STRING
 		// SEPARATED BY "-"
@@ -58,18 +79,21 @@ public class Header {
 		//////////////////////
 		// CONVERTS INPUT TO BINARY
 		//////////////////////	
+		StringBuilder binarystring = new StringBuilder();
 		String binary = null;
+		String bin = null;
 		for(int i = 0; i< headerData.length; i++){
 			if(!(i == 5) && !(i == 10) && !(i == 11)) {
 				int decimal = (Integer) headerData[i];
 				binary = Integer.toBinaryString(decimal);
+				bin = String.format("%8s", binary).replace(' ', '0');
 			} else if (i == 5) {
-				binary = headerData[i].toString();
+				bin = headerData[i].toString();
 			} else if (i == 10 || i == 11) {
 				String IP = headerData[i].toString();
-				binary = binaryIP(IP);
+				bin = binaryIP(IP);
 			}
-			binarystring.append(binary);
+			binarystring.append(bin);
 			binarystring.append(" ");
 		}
 		
@@ -83,17 +107,34 @@ public class Header {
 		String[] numbers = null;
 		String binNumber = ""; 
 		StringBuilder binIP = new StringBuilder();
+		String bin = null;
 		
 		numbers = IP.split("\\.");
 		
 		for(int i = 0; i< numbers.length; i++){
 			int number = Integer.parseInt(numbers[i]);
 			binNumber = Integer.toBinaryString(number);
-			binIP.append(binNumber);
+			bin = String.format("%8s", binNumber).replace(' ', '0');
+			binIP.append(bin);
 		}
 		
 		String binaryIP = binIP.toString();
 		return binaryIP;
+	}
+	
+	private String IPString(String number) {
+		//////////////////////
+		// CONVERTS BINARY STRING (8 BITS) TO IP ADRESS
+		//////////////////////	
+		StringBuilder IPString = new StringBuilder();
+		String[] IPBit = number.split("(?<=\\G.{" + 8 + "})");
+		for(int j = 0; j< IPBit.length; j++){
+			int decimalValue = Integer.parseInt(IPBit[j], 2);
+			IPString.append(decimalValue);
+			IPString.append(".");
+		}
+		IPString.deleteCharAt(IPString.length() - 1);
+		return IPString.toString();	
 	}
 	
 
@@ -174,6 +215,14 @@ public class Header {
 	
 	public String getDestination() {
 		return this.destination;
+	}
+	
+	public void setBinary(String binary) {
+		this.binary = binary;
+	}
+	
+	public String getBinary() {
+		return this.binary;
 	}
 	
 }
